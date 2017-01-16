@@ -125,7 +125,7 @@ require([
     function initSection(sectionCode) {
         var url = "";
 
-        if (sectionCode === "01", sectionCode === "02") {
+        if (sectionCode === "01" || sectionCode === "02") {
             url += "/api2";
         }
 
