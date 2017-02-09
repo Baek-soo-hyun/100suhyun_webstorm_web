@@ -19,7 +19,7 @@ define([
     }
 
     function search() {
-        location.href = "search.html";
+        location.href = global.root + "/search.html";
     }
 
     function clearSearchKeywords() {
@@ -85,7 +85,7 @@ define([
         }
 
         $.ajax({
-            url: "/api2/member/signup",
+            url: global.root + "/api2/member/signup",
             method: "POST", /*브라우저 개발자창&URL에 비밀번호와 아이디를 확인할 수 없게 하기 위해 POST 방식으로 해야 함*/
             data: {
                 userId: userId,
@@ -109,7 +109,7 @@ define([
 
     function checkSignedIn() {
         $.ajax({
-            url: "/api2/member/signedin",
+            url: global.root + "/api2/member/signedin",
             success: function(data) {
                 if (data.result === "yes") {
                     $(".hp-sign-up").hide();
@@ -143,7 +143,7 @@ define([
         }
 
         $.ajax({
-            url: "/api2/member/signin",
+            url: global.root + "/api2/member/signin",
             method: "POST",
             data: {
                 userId: userId,
@@ -186,7 +186,7 @@ define([
         }
 
         $.ajax({
-            url: "/api2/member/update",
+            url: global.root + "/api2/member/update",
             method: "POST",
             data: {
                 userPw: userPw
@@ -246,7 +246,7 @@ define([
 
     function openAjaxPopup(layerName) {
         $.ajax({
-            url: "layers/" + layerName + ".html",
+            url: global.root + "/layers/" + layerName + ".html",
             success: function (html) {
                 $("body").css("overflow", "hidden");
 
@@ -263,7 +263,7 @@ define([
     }
 
     $("#main-logo").on("click", function() {
-        location.href = "/";
+        location.href = global.root + "/";
     });
 
     $(".hp-member").on("click", function() {
@@ -284,7 +284,7 @@ define([
 
     $(".hp-sign-out").on("click", function() {
         $.ajax({
-            url: "/api2/member/signout",
+            url: global.root + "/api2/member/signout",
             success: function() {
                 $(".hp-sign-up").show();
                 $(".hp-sign-in").show();
@@ -319,7 +319,7 @@ define([
 
     function initHotPlaces() {
         $.ajax({
-            url: "/api/common/hotplaces",
+            url: global.root + "/api/common/hotplaces",
             success: function(hotPlaces) {
                 addHotPlaces(hotPlaces);
             }

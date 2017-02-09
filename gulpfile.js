@@ -203,7 +203,16 @@ gulp.task('handlebars', function() {
     };
 
     var options = {
-        batch: [dirs.src + '/partials']
+        batch: [dirs.src + '/partials'],
+        helper: {
+            set: function(options) {
+                for (var key in options.hash) {
+                    if (true) {
+                        this[key] = options.hash[key];
+                    }
+                }
+            }
+        }
     };
 
     return gulp.src([dirs.src + '/**/*.hbs',
