@@ -30,6 +30,7 @@ define([
 
     function closeLayerPopup() {
         $(popupCssSelector).hide();
+
         $(".hp-block-layer").remove();
         $("body").css("overflow", "");
 
@@ -37,18 +38,20 @@ define([
     }
 
     function openLayerPopup(cssSelector) {
-        if(popupCssSelector === cssSelector) {
+        if (popupCssSelector === cssSelector) {
             return;
         }
 
         popupCssSelector = cssSelector;
 
         $("body").css("overflow", "hidden");
+
         var blockLayerHTML = "<div class='hp-block-layer'></div>";
         $("body").append(blockLayerHTML);
+
         $(cssSelector).show();
 
-        $(".hp-block-layer").on("click", function () {
+        $(".hp-block-layer").on("click", function() {
             closeLayerPopup();
         });
     }
@@ -91,18 +94,22 @@ define([
                 userId: userId,
                 userPw: userPw
             },
-            success: function (data) {
-                if(data.result === "ok") {
+            success: function(data) {
+                if (data.result === "ok") {
                     alert(userId + "님 환영합니다.");
                     closeAjaxPopup();
                 }
                 else {
                     alert("정상적으로 가입되지 않았습니다.");
                 }
-
             },
-            error: function (jqXHR) {
-                alert(jqXHR.responseJSON.message);
+            error: function(jqXHR) {
+                if (jqXHR.status === 1500) {
+                    alert(JSON.parse(jqXHR.responseText).errorMsg);
+                }
+                else {
+                    alert(jqXHR.responseJSON.message);
+                }
             }
         });
     }
@@ -165,7 +172,12 @@ define([
 
             },
             error: function (jqXHR) {
-                alert(jqXHR.responseJSON.message);
+                if (jqXHR.status === 1500) {
+                    alert(JSON.parse(jqXHR.responseText).errorMsg);
+                }
+                else {
+                    alert(jqXHR.responseJSON.message);
+                }
             }
         });
     }
@@ -191,7 +203,7 @@ define([
             data: {
                 userPw: userPw
             },
-            success: function (data) {
+            success: function(data) {
                 if (data.result === "ok") {
                     alert("정상적으로 수정되었습니다.");
                     closeAjaxPopup();
@@ -200,19 +212,24 @@ define([
                     alert("정상적으로 수정되지 않았습니다.");
                 }
             },
-            error: function (jqXHR) {
-                alert(jqXHR.responseJSON.message);
+            error: function(jqXHR) {
+                if (jqXHR.status === 1500) {
+                    alert(JSON.parse(jqXHR.responseText).errorMsg);
+                }
+                else {
+                    alert(jqXHR.responseJSON.message);
+                }
             }
         });
     }
 
-
     function attachPopupEvents(layerName) {
         if (layerName === "sign-up") {
-            $("#hp-member-sign-up").on("click", function () {
+            $("#hp-member-sign-up").on("click", function() {
                 signUp();
             });
-            $(".hp-reset").on("click", function () {
+
+            $(".hp-reset").on("click", function() {
                 $("#hp-user-id").val("");
                 $("#hp-user-pw").val("");
                 $("#hp-user-pw-cfm").val("");
@@ -220,18 +237,17 @@ define([
                 $("#hp-user-id").focus();
             });
         }
-
         else if (layerName === "sign-in") {
-            $("#hp-member-sign-in").on("click", function () {
+            $("#hp-member-sign-in").on("click", function() {
                 signIn();
             });
         }
         else if (layerName === "member-info") {
-            $("#hp-member-info-update").on("click", function () {
+            $("#hp-member-info-update").on("click", function() {
                 updateMemberInfo();
             });
 
-            $(".hp-reset").on("click", function () {
+            $(".hp-reset").on("click", function() {
                 $("#hp-user-pw").val("");
                 $("#hp-user-pw-cfm").val("");
 
@@ -239,7 +255,7 @@ define([
             });
         }
 
-        $(".hp-block-layer.ajax, .hp-popup-close").on("click", function () {
+        $(".hp-block-layer.ajax, .hp-popup-close").on("click", function() {
             closeAjaxPopup();
         });
     }
@@ -247,7 +263,7 @@ define([
     function openAjaxPopup(layerName) {
         $.ajax({
             url: global.root + "/layers/" + layerName + ".html",
-            success: function (html) {
+            success: function(html) {
                 $("body").css("overflow", "hidden");
 
                 var blockLayerHTML = "<div class='hp-block-layer ajax'></div>";
