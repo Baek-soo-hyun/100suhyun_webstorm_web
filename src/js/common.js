@@ -373,6 +373,7 @@ define([
         return Math.min(zoom, maxZoom);
     }
 
+
     // 매번 실행시켜줘야 새로고침해도 실행됨 //
     checkSignedIn();
 
