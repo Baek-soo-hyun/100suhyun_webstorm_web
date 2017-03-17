@@ -204,7 +204,7 @@ gulp.task('handlebars', function() {
 
     var options = {
         batch: [dirs.src + '/partials'],
-        helper: {
+        helpers: {
             set: function(options) {
                 for (var key in options.hash) {
                     if (true) {

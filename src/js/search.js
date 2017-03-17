@@ -67,7 +67,7 @@ require([
 
     function initMap(list) {
         require(["async!https://maps.googleapis.com/maps/api/js?key=" +
-        "AIzaSyAHX_Y_cP2i1v9lchEPJ4yROwzh9nK6of0"], function() {
+        "AIzaSyBMsKoO3fXt5FIiSZikmyWuLrHz2-LSqfA"], function() {
             configureMap(list);
         });
     }
