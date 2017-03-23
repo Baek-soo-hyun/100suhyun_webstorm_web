@@ -18,12 +18,27 @@ define([
         resizeHeaderSearch();
     }
 
-    function search() {
-        location.href = window._ctx.root + "/search.html";
+    // 검색 input TEXT 초기화
+    function clearSearchKeywords() {
+        $(".search-input").val("");
     }
 
-    function clearSearchKeywords() {
-        $("#main-search, #top-search").val("");
+    // 검색하면 해당 검색어 페이지로 이동
+    function search() {
+        var keyword = $(".search-input").val().trim();
+
+        if(keyword === "") {
+            alert("검색어를 입력하세요.");
+            clearSearchKeywords();
+            $(".search-input").focus();
+            return;
+        }
+
+        // 키워드로 특수문자를 넣으면 URL이 이상해질 수 있으니까, 특수문자는 알아서 치환해주는 함수 (띄어쓰기/%/& 등등)
+        keyword = encodeURIComponent(keyword);
+
+        // 검색된 키워드는 URL 뒤에 붙여줌
+        location.href = window._ctx.root + "/search.html?keyword=" + keyword;
     }
 
     var popupCssSelector = "";

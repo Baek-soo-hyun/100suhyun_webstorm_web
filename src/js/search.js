@@ -23,25 +23,28 @@ require([
         // Create a map object and specify the DOM element for display.
         mapInfo.map = new google.maps.Map(document.getElementById("map"), {
             center: mapInfo.center,
-            scrollwheel: false,
+            scrollwheel: true,
             mapTypeControl: false,
             zoom: 15
         });
 
-        for (var i=0;i<list.stores.length;i++) {
-            var store = list.stores[i];
+        for (var i=0;i<list.length;i++) {
+            var store = list[i];
 
             // Create a marker and set its position.
             var marker = new google.maps.Marker({
                 map: mapInfo.map,
-                position: store.latLng,
+                position: {
+                    lat: store.lat,
+                    lng: store.lng,
+                },
                 title: store.name
             });
 
-            minLat = Math.min(minLat, store.latLng.lat);
-            maxLat = Math.max(maxLat, store.latLng.lat);
-            minLng = Math.min(minLng, store.latLng.lng);
-            maxLng = Math.max(maxLng, store.latLng.lng);
+            minLat = Math.min(minLat, store.lat);
+            maxLat = Math.max(maxLat, store.lat);
+            minLng = Math.min(minLng, store.lng);
+            maxLng = Math.max(maxLng, store.lng);
 
             if (false) {
                 console.log(marker);
@@ -60,11 +63,14 @@ require([
         mapInfo.map.setZoom(zoom);
     }
 
+    // Map resize
     function resizeMap() {
         google.maps.event.trigger(mapInfo.map, 'resize');
+        // triger : 이벤트가 발생할 때 실행될 함수를 강제로 실행
         mapInfo.map.panTo(mapInfo.center);
     }
 
+    // 구글맵 KEY 설정
     function initMap(list) {
         require(["async!https://maps.googleapis.com/maps/api/js?key=" +
         "AIzaSyBMsKoO3fXt5FIiSZikmyWuLrHz2-LSqfA"], function() {
@@ -72,24 +78,9 @@ require([
         });
     }
 
-    var tempList = {
-        "stores": [{
-            "name": "믹스앤몰트",
-            "latLng": {
-                "lat": 37.5567962,
-                "lng": 126.9313453
-            }
-        }, {
-            "name": "거구장",
-            "latLng": {
-                "lat": 37.5526233,
-                "lng": 126.9375131
-            }
-        }]
-    };
-
-
+    // 지도 크게/작게 버튼
     $("#map-control").on("click", function () {
+        // true
         mapInfo.isBig = !mapInfo.isBig;
         if (mapInfo.isBig) {
             $(".search-list").css("width", mapInfo.SMALL_LIST_WIDTH);
@@ -101,6 +92,7 @@ require([
             $(".stores>li").css("width", "100%");
             $(".stores").removeClass("big");
         }
+        // 지도 작게
         else {
             $(".search-list").css("width", "calc(100% - " + mapInfo.SMALL_INFO_WIDTH + ")");
             $(".search-info").css("width", mapInfo.SMALL_INFO_WIDTH);
@@ -179,8 +171,72 @@ require([
         $(".region-details[region='" + region + "']").show();
     });
 
+    function clearStore() {
+        $(".search-list section.list .stores").empty();
+    }
 
-    initMap(tempList);
+    function appendStore(store) {
+        var storeHTML = "";
+
+        storeHTML += "<li>";
+        storeHTML += "<div class='store-img' style='background-image: url(" +
+            store.img + ")'></div>";
+        storeHTML += "<div class='store-text'>";
+        storeHTML += "<div class='store-name'>";
+        storeHTML += store.name;
+        storeHTML += "</div>";
+        storeHTML += "<div class='store-score'>";
+        storeHTML += store.score.toFixed(1);
+        storeHTML += "</div>";
+        storeHTML += "<div class='store-info'>";
+        storeHTML += store.location + " - " + store.category;
+        storeHTML += "</div>";
+        storeHTML += "<div class='store-views'>";
+        storeHTML += "<i class='fa fa-eye'></i>";
+        storeHTML += store.view_cnt;
+        storeHTML += "</div>";
+        storeHTML += "<div class='store-reviews'>";
+        storeHTML += "<i class='fa fa-pencil'></i>";
+        storeHTML += "0";
+        storeHTML += "</div>";
+        storeHTML += "</div>";
+        storeHTML += "</li>";
+
+        $(".search-list section.list .stores").append(storeHTML);
+    }
+
+    function initSearch() {
+        // 검색 keyword를 URL에서 추출
+        var urlSearchParams = new window.URLSearchParams(location.search);
+        var keyword = urlSearchParams.get("keyword");
+
+        // 검색 페이지의 상단 타이틀 변경 => "{keyword} 맛집 인기 검색 순위"
+        $(".search-keyword").text(keyword);
+
+        $.ajax({
+            url: "/api2/store/search",
+            data: {
+                keyword: keyword,
+                page: 1,
+                rowsPerPage: 10,
+            },
+            success: function(result) {
+               clearStore();
+
+               var list = result.list;
+
+               initMap(list);
+
+               for (var i=0; i<list.length; i++) {
+                   var store = list[i];
+
+                   appendStore(store);
+               }
+            },
+        });
+    }
+
+    initSearch();
 
     common.initHotPlaces();
 
