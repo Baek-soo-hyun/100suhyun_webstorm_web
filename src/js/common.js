@@ -155,7 +155,6 @@ define([
 
         if (userId === undefined || userId === "") {
             alert("아이디를 입력하세요.");
-            $("#hp-user-id").focus();
             return;
         }
         else if (userPw === undefined || userPw === "") {

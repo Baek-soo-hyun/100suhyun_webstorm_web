@@ -101,7 +101,7 @@ require([
 
                 sectionHTML = "<li store-id='" + item.id + "'>";
                 sectionHTML += "<div class=\"section-img\" " +
-                    "style=\"background-image: url('" + window._ctx.root + "/" + item.img + "')\"></div>";
+                    "style=\"background-image: url('" + window._ctx.web + "/" + item.img + "')\"></div>";
                 sectionHTML += "<div class=\"section-name\">";
                 sectionHTML += item.name;
                 sectionHTML += "</div>";
@@ -125,7 +125,7 @@ require([
     }
 
     function initSection(sectionCode) {
-        var url = window._ctx.root;
+        var url = window._ctx.web;
         url += "/api2/main/section/" + sectionCode + "/items";
 
         if (sectionCode === "01") {
@@ -189,7 +189,7 @@ require([
 
     function getMainImgs() {
         $.ajax({
-            url: window._ctx.root + "/api2/main/imgs",
+            url: window._ctx.web + "/api2/main/imgs",
             success: function(imgList) {
                 mainImgList = imgList;
 
